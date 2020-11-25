@@ -34,7 +34,15 @@ packages:
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
-# extra-deps:
+extra-deps:
+- discord-haskell-1.8.0@sha256:420515069c5be313dd31d16e9a4b163d2b3fdda18ba18e98cbb0b0536cbae136,3562
+- gogol-0.5.0@sha256:01b38acf97ae0afb2465935fee1bebce03c1b84e629cf0887467be7ae361f0a7,3222
+- gogol-apps-calendar-0.5.0@sha256:7c02f3b58e832037f0ef5efd6ecf62529e0628699d1661cdf1bce0a7c879a234,3550
+- github: Hazelfire/rrule
+  commit: 5485872705ea8a9c77eb8d593f016b8c72f8167e
+- emoji-0.1.0.2@sha256:d995572a5c7dcd28f98eb15c6e387a7b3bda1ac2477ab0d9dba8580d5d7b161f,1273
+- gogol-core-0.5.0@sha256:c0a919cd89a33de7fd6ee925abdb48b0eb5d1002a016124acbdff568f267e4c7,2821
+- time-1.9.3@sha256:8f1b5448722a12a952248b356c9eb366e351226543d9086a2da71270522d5f45,5679
 # - acme-missiles-0.3
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
