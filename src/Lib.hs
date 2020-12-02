@@ -74,6 +74,21 @@ eventHandler event =  Reader.ask >>= \_ ->
           "!events" -> do
             events <- liftIO fetchNewEvents
             sendEmbed (D.messageChannel m) events
+          "!events tpc" -> do
+            events <- liftIO $ fetchClubEvents "The Programming Club"
+            sendEmbed (D.messageChannel m) events
+          "!events the programming club" -> do
+            events <- liftIO $ fetchClubEvents "The Programming Club"
+            sendEmbed (D.messageChannel m) events
+          "!events csit" -> do
+            events <- liftIO $ fetchClubEvents "CSIT Society"
+            sendEmbed (D.messageChannel m) events
+          "!events csit society" -> do
+            events <- liftIO $ fetchClubEvents "CSIT Society"
+            sendEmbed (D.messageChannel m) events
+          "!events risc" -> do
+            events <- liftIO $ fetchClubEvents "RISC"
+            sendEmbed (D.messageChannel m) events
           _ -> pure ()
 
         
@@ -154,6 +169,23 @@ fetchNewEvents = do
     Google.newEnvWith crd lgr mgr <&> (Google.envScopes .~ Calendar.calendarScope)
   now <- Time.getCurrentTime
   events <- concat <$> forM savedCalendars (\(SavedCalendar clubName calendarId) -> do
+    r <-
+      runResourceT . Google.runGoogle env . Google.send $
+      (Calendar.eventsList calendarId & Calendar.elTimeMin .~ (Just now))
+    concat <$> mapM  (expandEvent clubName now  (Time.addUTCTime (Time.nominalDay * 21) now)) (r^.Calendar.eveItems)
+    )
+  return events
+
+fetchClubEvents :: T.Text -> IO [ClubEvent]
+fetchClubEvents club = do
+  let filteredCalendars = filter ((==club) . savedCalendarTitle) savedCalendars
+  lgr <- Google.newLogger Google.Debug stdout
+  mgr <- newManager tlsManagerSettings
+  crd <- Google.getApplicationDefault mgr
+  env <-
+    Google.newEnvWith crd lgr mgr <&> (Google.envScopes .~ Calendar.calendarScope)
+  now <- Time.getCurrentTime
+  events <- forM filteredCalendars (\(SavedCalendar clubName calendarId) -> do
     r <-
       runResourceT . Google.runGoogle env . Google.send $
       (Calendar.eventsList calendarId & Calendar.elTimeMin .~ (Just now))
